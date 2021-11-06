@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+   <meta charset="UTF-8">
+   <meta http-equiv="X-UA-Compatible" content="IE=edge">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+   <title>Quote Generator</title>
+</head>
+
+<body>
+   <div id="container">
+      <div id="quote-box" class="bg-light w-50 p-5 rounded">
+         <h3 id="text" class="display-6 fw-bold"></h3>
+         <p id="author" class="col-md-8 fs-4 align-right"></p>
+         <button id="new-quote" class="btn btn-primary btn-lg me-2" type="button">New qoute</button>
+         <a id="tweet-quote" class="link" href="https://twitter.com/intent/tweet">Tweet this quote</a>
+      </div>
+   </div>
+   <style>
+      body {
+         transition: all ease-in .5s;
+      }
+
+      #container {
+         display: flex;
+         justify-content: center;
+         align-items: center;
+         height: 100vh;
+      }
+   </style>
+   <script>
+      const btn = document.querySelector("#new-quote");
+      const quoteText = document.querySelector("#text");
+      const quoteAuthor = document.querySelector("#author");
+      const body = document.querySelector('body');
+
+      const fetchQuote = async () => {
+         let data = await fetch("https://free-quotes-api.herokuapp.com");
+         data = await data.json();
+         if (!data.author) data.author = "Unknown";
+         return data;
+      };
+
+      const newQuote = async () => {
+         const { quote, author } = await fetchQuote();
+         quoteAuthor.innerText = `- ${author}`;
+         quoteText.innerText = `"${quote}"`;
+         const r = Math.floor(Math.random() * 255);
+         const g = Math.floor(Math.random() * 255);
+         const b = Math.floor(Math.random() * 255);
+         body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+      };
+      
+      btn.addEventListener("click", newQuote);
+      newQuote();
+   </script>
+</body>
+
+</html>
